@@ -137,8 +137,22 @@ function Gallery() {
   );
 }
 
+function getTomorrowMorningValue() {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(9, 30, 0, 0);
+
+  const timezoneOffset = tomorrow.getTimezoneOffset() * 60000;
+  return new Date(tomorrow.getTime() - timezoneOffset).toISOString().slice(0, 16);
+}
+
 function BookingForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [arrivalTime, setArrivalTime] = useState("");
+
+  useEffect(() => {
+    setArrivalTime(getTomorrowMorningValue());
+  }, []);
 
   return (
     <form
@@ -175,6 +189,15 @@ function BookingForm() {
             <option>美容造型</option>
             <option>猫咪轻护理</option>
           </select>
+        </label>
+        <label>
+          期望到店日期
+          <input
+            type="datetime-local"
+            name="arrivalTime"
+            value={arrivalTime}
+            onChange={(event) => setArrivalTime(event.target.value)}
+          />
         </label>
         <label className="full">
           备注
